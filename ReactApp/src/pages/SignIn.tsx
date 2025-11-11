@@ -50,22 +50,9 @@ export default function SignIn() {
       console.log('Final userData to send:', userData);
       console.log('Password included:', !!userData.password);
       
-      // Register user with JWT
-      const response = await fetch('http://localhost:8000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Registration failed');
-      }
-      
-      console.log('Registration successful:', data);
+      // Use the addUser function from store
+      const result = await addUser(userData);
+      console.log('User creation result:', result);
       
       // Clear form
       setFormData({

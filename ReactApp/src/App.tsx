@@ -12,33 +12,31 @@ import { ROUTES } from '@/constants/routes.constant';
 function App() {
   return (
     <BrowserRouter>
-      <AdminLayout>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path={ROUTES.DASHBOARD} element={
-            <AdminLayout>
-              <Dashboard />
-            </AdminLayout>
-          } />
-          <Route path={ROUTES.USERS_LIST} element={
-            <AdminLayout>
-              <ProductsTable />
-            </AdminLayout>
-          } />
-          <Route path={ROUTES.LOCAL_USERS} element={
-            <AdminLayout>
-              <LocalUsersTable />
-            </AdminLayout>
-          } />
-          <Route path="/profile" element={
-            <AdminLayout>
-              <Profile />
-            </AdminLayout>
-          } />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AdminLayout>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path={ROUTES.DASHBOARD} element={
+          <AdminLayout>
+            <Dashboard />
+          </AdminLayout>
+        } />
+        <Route path={ROUTES.USERS_LIST} element={
+          <AdminLayout>
+            <ProductsTable />
+          </AdminLayout>
+        } />
+        <Route path={ROUTES.LOCAL_USERS} element={
+          <AdminLayout>
+            <LocalUsersTable />
+          </AdminLayout>
+        } />
+        <Route path="/profile" element={
+          <AdminLayout>
+            <Profile />
+          </AdminLayout>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
   );
 }

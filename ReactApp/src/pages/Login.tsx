@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useLocalUsers } from "@/store/useLocalUsers";
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
 import AuthLayout from "./AuthLayout";
 
 export default function Login() {
@@ -19,36 +19,26 @@ export default function Login() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
-    try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        setError(data.error || 'Login failed');
-        return;
-      }
-      
-      // Store JWT token
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      console.log('Login successful:', data);
-      navigate("/");
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Login failed. Please try again.');
+    // Find user by email first
+    const user = users.find(user => user.email === email);
+    
+    if (!user) {
+      setError("Email not found. Please check your email or sign up.");
+      return;
     }
+    
+    // Check if password matches
+    if (user.password !== password) {
+      setError("Incorrect password. Please try again.");
+      return;
+    }
+    
+    // Login successful
+    navigate("/");
   };
   
   const handleGoogleSuccess = (credentialResponse: any) => {
@@ -105,25 +95,7 @@ export default function Login() {
           </Button>
         </form>
         
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-gray-500">Or continue with</span>
-          </div>
-        </div>
-        
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            theme="outline"
-            size="large"
-            text="signin_with"
-            shape="rectangular"
-          />
-        </div>
+
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
