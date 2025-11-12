@@ -32,7 +32,12 @@ router.post("/login", async (req, res) => {
     
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        username: user.email,
+        password: user.password
+      },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
@@ -78,7 +83,12 @@ router.post("/register", async (req, res) => {
     
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { 
+        userId: user._id, 
+        email: user.email,
+        username: user.email,
+        password: hashedPassword
+      },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );

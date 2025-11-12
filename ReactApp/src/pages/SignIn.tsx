@@ -50,9 +50,9 @@ export default function SignIn() {
       console.log('Final userData to send:', userData);
       console.log('Password included:', !!userData.password);
       
-      // Use the addUser function from store
+      console.log('Creating user with data:', userData);
       const result = await addUser(userData);
-      console.log('User creation result:', result);
+      console.log('User created successfully:', result);
       
       // Clear form
       setFormData({
@@ -68,10 +68,8 @@ export default function SignIn() {
       alert('User created and saved to database! Check users table.');
       navigate("/login");
     } catch (error) {
-      console.error("Failed to create user - Full error:", error);
-      console.error("Error message:", error.message);
-      console.error("Error response:", error.response?.data);
-      alert(`Failed to create user: ${error.message}`);
+      console.error("Failed to create user:", error);
+      alert('Failed to create user. Please try again.');
     }
   };
 

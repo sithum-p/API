@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import { useLocalUsers } from "@/store/useLocalUsers";
-// import { GoogleLogin } from '@react-oauth/google';
+import { useAuth } from "@/store/useAuth";
 import AuthLayout from "./AuthLayout";
 
 export default function Login() {
@@ -12,33 +12,18 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
-  const { users, fetchUsers } = useLocalUsers();
-  
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
-    // Find user by email first
-    const user = users.find(user => user.email === email);
-    
-    if (!user) {
-      setError("Email not found. Please check your email or sign up.");
-      return;
+    try {
+      await login(email, password);
+      navigate("/");
+    } catch (error: any) {
+      setError(error.message || "Login failed. Please try again.");
     }
-    
-    // Check if password matches
-    if (user.password !== password) {
-      setError("Incorrect password. Please try again.");
-      return;
-    }
-    
-    // Login successful
-    navigate("/");
   };
   
   const handleGoogleSuccess = (credentialResponse: any) => {
@@ -77,9 +62,8 @@ export default function Login() {
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

@@ -3,18 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/store/useAuth";
 
 export default function Profile() {
+  const { user } = useAuth();
+  
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    location: "New York, USA"
+    name: "",
+    email: "",
+    phone: "",
+    location: ""
   });
   
   const [editProfile, setEditProfile] = useState({ ...profile });
   const [open, setOpen] = useState(false);
+  
+  useEffect(() => {
+    if (user) {
+      const userProfile = {
+        name: `${user.firstname || ''} ${user.lastname || ''}`.trim() || user.email,
+        email: user.email || '',
+        phone: user.phone || 'Not provided',
+        location: user.location || 'Not provided'
+      };
+      setProfile(userProfile);
+      setEditProfile(userProfile);
+    }
+  }, [user]);
   
   const handleSave = () => {
     setProfile({ ...editProfile });
@@ -31,8 +47,8 @@ export default function Profile() {
             <User className="h-12 w-12 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold">{profile.name}</h2>
-            <p className="text-gray-600">Administrator</p>
+            <h2 className="text-xl font-semibold">{profile.name || 'User'}</h2>
+            <p className="text-gray-600">User ID: {user?.id || 'N/A'}</p>
           </div>
         </div>
         

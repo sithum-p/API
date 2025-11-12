@@ -1,4 +1,5 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
 import User from "../models/user.js";
 
 const router = Router();
@@ -25,17 +26,17 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     console.log('Received user data:', req.body);
-    console.log('User data keys:', Object.keys(req.body));
-    console.log('User data values:', Object.values(req.body));
+    
+    // Hash password if provided
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
     
     const created = await User.create(req.body);
     console.log('Created user:', created);
     res.status(201).json({ data: created, message: "User added successfully!" });
   } catch (e) {
     console.log('Detailed error:', e);
-    console.log('Error name:', e.name);
-    console.log('Error message:', e.message);
-    console.log('Validation errors:', e.errors);
     res.status(400).json({ error: e.message, details: e.errors });
   }
 });
@@ -44,6 +45,12 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     console.log('Updating user with data:', req.body);
+    
+    // Hash password if provided
+    if (req.body.password) {
+      req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+    
     const updated = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

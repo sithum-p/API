@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, UserCog, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Users, UserCog, Settings, ChevronRight } from "lucide-react";
 import { ROUTES } from "@/constants/routes.constant";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +7,7 @@ const menuItems = [
   { path: ROUTES.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
   { path: ROUTES.USERS_LIST, label: "Products", icon: Users },
   { path: ROUTES.LOCAL_USERS, label: "Local Users", icon: UserCog },
+  { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -37,15 +38,7 @@ export default function Sidebar() {
           ))}
         </div>
       </nav>
-      <div className="border-t p-4">
-        <div className="flex items-center gap-3 rounded-md px-3 py-2">
-          <div className="h-8 w-8 rounded-full bg-sidebar-primary" />
-          <div className="flex-1">
-            <p className="text-sm font-medium">Admin User</p>
-            <p className="text-xs text-sidebar-foreground/70">admin@example.com</p>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }

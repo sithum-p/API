@@ -5,4 +5,17 @@ const axiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// Add token to requests
+axiosInstance.interceptors.request.use((config) => {
+  const token = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('auth='))
+    ?.split('=')[1];
+  
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default axiosInstance;

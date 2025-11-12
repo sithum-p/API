@@ -133,8 +133,7 @@ export default function LocalUsersPage() {
       header: "Password",
       cell: ({ row }) => {
         const password = row.original.password;
-        console.log('Password for user:', row.original.email, 'is:', password);
-        return <span>{password ? password : "No Password"}</span>;
+        return <span>{password ? "••••••••" : "No Password"}</span>;
       },
     },
     {
@@ -357,7 +356,7 @@ export default function LocalUsersPage() {
             </div>
             <div className="sm:col-span-2">
               <p className="text-xs text-gray-500">Password</p>
-              <p className="font-medium">{viewingUser.password ? viewingUser.password : "No Password"}</p>
+              <p className="font-medium">{viewingUser.password ? "••••••••" : "No Password"}</p>
             </div>
           </div>
         ) : (

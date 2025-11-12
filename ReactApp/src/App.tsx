@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminLayout from '@/components/layout/AdminLayout';
+import AuthChecker from '@/components/AuthChecker';
 import Dashboard from '@/pages/Dashboard';
 import ProductsTable from '@/pages/ProductsTable';
 import LocalUsersTable from '@/pages/LocalUsersTable';
 import Profile from '@/pages/Profile';
+import Settings from '@/pages/Settings';
 import Login from '@/pages/Login';
 import SignIn from '@/pages/SignIn';
 import NotFound from '@/pages/NotFound';
@@ -11,8 +13,9 @@ import { ROUTES } from '@/constants/routes.constant';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <AuthChecker>
+      <BrowserRouter>
+        <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path={ROUTES.DASHBOARD} element={
@@ -35,9 +38,15 @@ function App() {
             <Profile />
           </AdminLayout>
         } />
+        <Route path="/settings" element={
+          <AdminLayout>
+            <Settings />
+          </AdminLayout>
+        } />
         <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </AuthChecker>
   );
 }
 
