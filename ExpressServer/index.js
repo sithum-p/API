@@ -30,29 +30,72 @@ const productModel=mongoose.model("products",productSchema);
 
 app.get("/api/products",async(req,res)=>{
     try {
-        const { limit, skip } = req.query;
-        const limitNum = parseInt(limit) || 10;
-        const skipNum = parseInt(skip) || 0;
+        // Extract pagination parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
         
-        const productData = await productModel.find().skip(skipNum).limit(limitNum);
-        const total = await productModel.countDocuments();
+        // Create pagination result object
+        const results = {};
         
-        console.log('Sample product:', JSON.stringify(productData[0], null, 2));
+        // Get total count for pagination info
+        const totalDocuments = await productModel.countDocuments();
         
+        // Add next page info if there are more documents
+        if (endIndex < totalDocuments) {
+            results.next = {
+                page: page + 1,
+                limit: limit
+            };
+        }
+        
+        // Add previous page info if not on first page
+        if (startIndex > 0) {
+            results.previous = {
+                page: page - 1,
+                limit: limit
+            };
+        }
+        
+        // Fetch paginated data from MongoDB
+        const productData = await productModel
+            .find()
+            .limit(limit)
+            .skip(startIndex)
+            .exec();
+        
+        // Transform data to match frontend interface
         const transformedData = productData.map(product => ({
             _id: product._id,
-            Name: product.Name,
-            Price: product.Price,
-            Category: product.Category,
-            Brand: product.Brand,
-            Stock: product.Stock
+            Name: product.Name || '',
+            Price: product.Price || 0,
+            Category: product.Category || '',
+            Brand: product.Brand || '',
+            Stock: product.Stock || 0
         }));
         
-        console.log('Transformed data:', JSON.stringify(transformedData[0], null, 2));
+        // Send paginated response
+        results.totalCount = totalDocuments;
+        results.totalPages = Math.ceil(totalDocuments / limit);
+        results.currentPage = page;
+        results.data = transformedData;
         
-        res.json({ data: transformedData, total });
+        console.log(`MongoDB Pagination: Page ${page}/${results.totalPages}, ${transformedData.length} items`);
+        
+        res.json({
+            success: true,
+            count: transformedData.length,
+            pagination: results,
+            data: transformedData,
+            total: totalDocuments
+        });
+        
     } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).json({ error: 'Failed to fetch products' });
+        console.error('MongoDB Pagination Error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server Error in pagination' 
+        });
     }
 })
