@@ -137,6 +137,20 @@ export default function LocalUsersPage() {
       },
     },
     {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => {
+        const role = row.original.role || 'user';
+        return (
+          <span className={`capitalize px-2 py-1 rounded-full text-xs font-medium ${
+            role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+          }`}>
+            {role}
+          </span>
+        );
+      },
+    },
+    {
       id: "actions",
       header: () => <div className="text-right pr-1">Actions</div>,
       cell: ({ row, table }) => {
@@ -357,6 +371,14 @@ export default function LocalUsersPage() {
             <div className="sm:col-span-2">
               <p className="text-xs text-gray-500">Password</p>
               <p className="font-medium">{viewingUser.password ? "••••••••" : "No Password"}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">Role</p>
+              <p className={`font-medium capitalize px-2 py-1 rounded-full text-xs ${
+                (viewingUser.role || 'user') === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+              }`}>
+                {viewingUser.role || 'user'}
+              </p>
             </div>
           </div>
         ) : (

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/store/useAuth";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -19,9 +20,10 @@ export default function Header() {
   };
   
   return (
-    <header className="fixed top-0 left-64 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
-      <h2 className="text-lg font-semibold text-gray-800">Welcome to Admin Panel</h2>
+    <header className="fixed top-0 left-64 right-0 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Welcome to Admin Panel</h2>
       <div className="flex items-center gap-4">
+        <ThemeToggle />
         <Button variant="ghost" size="icon">
           <Bell className="h-5 w-5" />
         </Button>

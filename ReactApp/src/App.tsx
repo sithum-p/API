@@ -1,6 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '@/components/layout/AdminLayout';
 import AuthChecker from '@/components/AuthChecker';
+import ThemeProvider from '@/components/ThemeProvider';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import RoleProtectedRoute from '@/components/RoleProtectedRoute';
 import Dashboard from '@/pages/Dashboard';
 import ProductsTable from '@/pages/ProductsTable';
 import LocalUsersTable from '@/pages/LocalUsersTable';
@@ -13,40 +16,55 @@ import { ROUTES } from '@/constants/routes.constant';
 
 function App() {
   return (
-    <AuthChecker>
-      <BrowserRouter>
+    <ThemeProvider>
+      <AuthChecker>
+        <BrowserRouter>
         <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path={ROUTES.DASHBOARD} element={
-          <AdminLayout>
-            <Dashboard />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          </ProtectedRoute>
         } />
         <Route path={ROUTES.USERS_LIST} element={
-          <AdminLayout>
-            <ProductsTable />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductsTable />
+            </AdminLayout>
+          </ProtectedRoute>
         } />
         <Route path={ROUTES.LOCAL_USERS} element={
-          <AdminLayout>
-            <LocalUsersTable />
-          </AdminLayout>
+          <ProtectedRoute>
+            <RoleProtectedRoute requiredRole="admin">
+              <AdminLayout>
+                <LocalUsersTable />
+              </AdminLayout>
+            </RoleProtectedRoute>
+          </ProtectedRoute>
         } />
         <Route path="/profile" element={
-          <AdminLayout>
-            <Profile />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <Profile />
+            </AdminLayout>
+          </ProtectedRoute>
         } />
         <Route path="/settings" element={
-          <AdminLayout>
-            <Settings />
-          </AdminLayout>
+          <ProtectedRoute>
+            <AdminLayout>
+              <Settings />
+            </AdminLayout>
+          </ProtectedRoute>
         } />
         <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </AuthChecker>
+        </BrowserRouter>
+      </AuthChecker>
+    </ThemeProvider>
   );
 }
 

@@ -48,7 +48,8 @@ router.post("/login", async (req, res) => {
         id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
-        email: user.email
+        email: user.email,
+        role: user.role || 'user'
       }
     });
   } catch (error) {
@@ -59,7 +60,7 @@ router.post("/login", async (req, res) => {
 // Register endpoint
 router.post("/register", async (req, res) => {
   try {
-    const { firstname, lastname, age, gender, email, birthdate, password } = req.body;
+    const { firstname, lastname, age, gender, email, birthdate, password, role } = req.body;
     
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -78,7 +79,8 @@ router.post("/register", async (req, res) => {
       gender,
       email,
       birthdate,
-      password: hashedPassword
+      password: hashedPassword,
+      role: role || 'user'
     });
     
     // Generate JWT token
@@ -99,7 +101,8 @@ router.post("/register", async (req, res) => {
         id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
-        email: user.email
+        email: user.email,
+        role: user.role || 'user'
       }
     });
   } catch (error) {

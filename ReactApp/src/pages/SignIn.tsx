@@ -16,7 +16,8 @@ export default function SignIn() {
     gender: "",
     email: "",
     birthdate: "",
-    password: ""
+    password: "",
+    role: "user"
   });
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ export default function SignIn() {
     
     try {
       // Validate all fields are filled
-      if (!formData.firstname || !formData.lastname || !formData.age || !formData.gender || !formData.email || !formData.birthdate || !formData.password) {
+      if (!formData.firstname || !formData.lastname || !formData.age || !formData.gender || !formData.email || !formData.birthdate || !formData.password || !formData.role) {
         alert('Please fill all fields');
         return;
       }
@@ -44,7 +45,8 @@ export default function SignIn() {
         gender: formData.gender,
         email: formData.email.trim().toLowerCase(),
         birthdate: formData.birthdate,
-        password: formData.password
+        password: formData.password,
+        role: formData.role
       };
       
       console.log('Final userData to send:', userData);
@@ -62,7 +64,8 @@ export default function SignIn() {
         gender: "",
         email: "",
         birthdate: "",
-        password: ""
+        password: "",
+        role: "user"
       });
       
       alert('User created and saved to database! Check users table.');
@@ -160,6 +163,18 @@ export default function SignIn() {
               placeholder="Enter password (min 6 characters)"
               required
             />
+          </div>
+          <div>
+            <Label htmlFor="role">Role</Label>
+            <Select onValueChange={(value) => handleChange("role", value)} value={formData.role}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button type="submit" className="w-full">
             Sign In

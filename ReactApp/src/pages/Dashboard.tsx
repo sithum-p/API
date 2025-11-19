@@ -24,40 +24,40 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Items</p>
-              <p className="text-3xl font-bold mt-2">{totalItems}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Total Items</p>
+              <p className="text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">{totalItems}</p>
               <p className="text-sm mt-2 text-green-600">+12% from last month</p>
             </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
+            <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
               <Users className="h-8 w-8 text-blue-600" />
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Products</p>
-              <p className="text-3xl font-bold mt-2">{productsCount}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Products</p>
+              <p className="text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">{productsCount}</p>
               <p className="text-sm mt-2 text-green-600">+8% from last month</p>
             </div>
-            <div className="bg-green-100 p-3 rounded-lg">
+            <div className="bg-green-100 dark:bg-green-900 p-3 rounded-lg">
               <Activity className="h-8 w-8 text-green-600" />
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Users</p>
-              <p className="text-3xl font-bold mt-2">{totalUsersCount}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Total Users</p>
+              <p className="text-3xl font-bold mt-2 text-gray-900 dark:text-gray-100">{totalUsersCount}</p>
               <p className="text-sm mt-2 text-blue-600">API: {apiUsersCount} | Local: {localUsersCount}</p>
             </div>
-            <div className="bg-purple-100 p-3 rounded-lg">
+            <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-lg">
               <UserCog className="h-8 w-8 text-purple-600" />
             </div>
           </div>
@@ -66,10 +66,10 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Product Analytics Chart */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-semibold">Product Analytics</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Product Analytics</h3>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={[
@@ -89,10 +89,10 @@ export default function Dashboard() {
         </div>
 
         {/* User Analytics Chart */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center gap-2 mb-4">
             <PieChart className="h-5 w-5 text-purple-600" />
-            <h3 className="text-lg font-semibold">User Analytics</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">User Analytics</h3>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <RechartsPieChart>

@@ -3,22 +3,34 @@ import { LayoutDashboard, Users, UserCog, Settings, ChevronRight } from "lucide-
 import { ROUTES } from "@/constants/routes.constant";
 import { cn } from "@/lib/utils";
 
-const menuItems = [
-  { path: ROUTES.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
-  { path: ROUTES.USERS_LIST, label: "Products", icon: Users },
-  { path: ROUTES.LOCAL_USERS, label: "Local Users", icon: UserCog },
-  { path: "/settings", label: "Settings", icon: Settings },
-];
+const getUserRole = () => {
+  return localStorage.getItem('userRole') || 'user';
+};
+
+const getMenuItems = () => {
+  const userRole = getUserRole();
+  const baseItems = [
+    { path: ROUTES.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
+    { path: ROUTES.USERS_LIST, label: "Products", icon: Users },
+  ];
+  
+  if (userRole === 'admin') {
+    baseItems.push({ path: ROUTES.LOCAL_USERS, label: "Local Users", icon: UserCog });
+  }
+  
+  baseItems.push({ path: "/settings", label: "Settings", icon: Settings });
+  return baseItems;
+};
 
 export default function Sidebar() {
   return (
-    <div className="fixed left-0 top-0 h-screen w-64 border-r bg-sidebar text-sidebar-foreground flex flex-col">
-      <div className="flex h-16 items-center border-b px-6">
-        <h1 className="text-lg font-semibold">Admin Panel</h1>
+    <div className="fixed left-0 top-0 h-screen w-64 border-r bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 flex flex-col">
+      <div className="flex h-16 items-center border-b border-gray-200 dark:border-gray-700 px-6">
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Admin Panel</h1>
       </div>
       <nav className="flex-1 overflow-auto p-4">
         <div className="space-y-2">
-          {menuItems.map((item) => (
+          {getMenuItems().map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -26,8 +38,8 @@ export default function Sidebar() {
                 cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
                 )
               }
             >

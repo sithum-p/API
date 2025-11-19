@@ -9,6 +9,7 @@ export interface User {
   email: string;
   birthdate: string;
   password?: string;
+  role: 'admin' | 'user';
 }
 
 export const usersAPI = {

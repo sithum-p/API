@@ -3,7 +3,7 @@ import { Product } from "@/types/product";
 
 export async function getProducts(
   page = 1,
-  limit = 10
+  limit = 20
 ): Promise<{ data: Product[]; total: number; pagination?: any }> {
   try {
     console.log(`Fetching products: page ${page}, limit ${limit}`);

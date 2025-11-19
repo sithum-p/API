@@ -67,10 +67,14 @@ export const useAuth = create<AuthState>()((set, get) => {
       
       setAuthCookie(data.token);
       set({ token: data.token, user: data.user, tokenExpiry: expiry });
+      
+      // Store user role in localStorage for easy access
+      localStorage.setItem('userRole', data.user.role || 'user');
     },
     
     logout: () => {
       deleteAuthCookie();
+      localStorage.removeItem('userRole');
       set({ token: null, user: null, tokenExpiry: null });
       // Force reload to clear any cached data
       setTimeout(() => window.location.reload(), 100);
