@@ -36,7 +36,8 @@ router.post("/login", async (req, res) => {
         userId: user._id, 
         email: user.email,
         username: user.email,
-        password: user.password
+        password: user.password,
+        role: user.role || 'user'
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
@@ -89,7 +90,8 @@ router.post("/register", async (req, res) => {
         userId: user._id, 
         email: user.email,
         username: user.email,
-        password: hashedPassword
+        password: hashedPassword,
+        role: user.role || 'user'
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }

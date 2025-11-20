@@ -33,6 +33,18 @@ const deleteAuthCookie = () => {
   document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
 };
 
+const getUserRoleFromToken = (): string => {
+  const token = getAuthCookie();
+  if (!token) return 'user';
+  
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role || 'user';
+  } catch {
+    return 'user';
+  }
+};
+
 interface AuthState {
   token: string | null;
   user: any | null;
@@ -41,6 +53,7 @@ interface AuthState {
   logout: () => void;
   isAuthenticated: () => boolean;
   checkTokenExpiry: () => void;
+  getUserRole: () => string;
 }
 
 export const useAuth = create<AuthState>()((set, get) => {
@@ -67,14 +80,10 @@ export const useAuth = create<AuthState>()((set, get) => {
       
       setAuthCookie(data.token);
       set({ token: data.token, user: data.user, tokenExpiry: expiry });
-      
-      // Store user role in localStorage for easy access
-      localStorage.setItem('userRole', data.user.role || 'user');
     },
     
     logout: () => {
       deleteAuthCookie();
-      localStorage.removeItem('userRole');
       set({ token: null, user: null, tokenExpiry: null });
       // Force reload to clear any cached data
       setTimeout(() => window.location.reload(), 100);
@@ -96,6 +105,10 @@ export const useAuth = create<AuthState>()((set, get) => {
       if (tokenExpiry && Date.now() > tokenExpiry) {
         get().logout();
       }
+    },
+    
+    getUserRole: () => {
+      return getUserRoleFromToken();
     }
   };
 });

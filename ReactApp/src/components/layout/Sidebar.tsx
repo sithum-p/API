@@ -2,13 +2,9 @@ import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Users, UserCog, Settings, ChevronRight } from "lucide-react";
 import { ROUTES } from "@/constants/routes.constant";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/store/useAuth";
 
-const getUserRole = () => {
-  return localStorage.getItem('userRole') || 'user';
-};
-
-const getMenuItems = () => {
-  const userRole = getUserRole();
+const getMenuItems = (userRole: string) => {
   const baseItems = [
     { path: ROUTES.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
     { path: ROUTES.USERS_LIST, label: "Products", icon: Users },
@@ -23,6 +19,9 @@ const getMenuItems = () => {
 };
 
 export default function Sidebar() {
+  const { getUserRole } = useAuth();
+  const userRole = getUserRole();
+  
   return (
     <div className="fixed left-0 top-0 h-screen w-64 border-r bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 flex flex-col">
       <div className="flex h-16 items-center border-b border-gray-200 dark:border-gray-700 px-6">
@@ -30,7 +29,7 @@ export default function Sidebar() {
       </div>
       <nav className="flex-1 overflow-auto p-4">
         <div className="space-y-2">
-          {getMenuItems().map((item) => (
+          {getMenuItems(userRole).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}

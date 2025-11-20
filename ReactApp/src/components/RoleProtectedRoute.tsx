@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/store/useAuth';
 
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
@@ -6,7 +7,8 @@ interface RoleProtectedRouteProps {
 }
 
 export default function RoleProtectedRoute({ children, requiredRole }: RoleProtectedRouteProps) {
-  const userRole = localStorage.getItem('userRole') || 'user';
+  const { getUserRole } = useAuth();
+  const userRole = getUserRole();
   
   if (requiredRole === 'admin' && userRole !== 'admin') {
     return <Navigate to="/" replace />;
