@@ -58,10 +58,28 @@ interface AuthState {
 
 export const useAuth = create<AuthState>()((set, get) => {
   const token = getAuthCookie();
+  let initialUser = null;
+  let initialExpiry = null;
+  
+  // Initialize user data from token if available
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      initialUser = {
+        id: payload.userId,
+        email: payload.email,
+        role: payload.role || 'user'
+      };
+      initialExpiry = payload.exp * 1000; // Convert to milliseconds
+    } catch {
+      // Invalid token, will be handled by isAuthenticated
+    }
+  }
+  
   return {
     token: token,
-    user: null,
-    tokenExpiry: null,
+    user: initialUser,
+    tokenExpiry: initialExpiry,
     
     login: async (email: string, password: string) => {
       const response = await fetch('/api/auth/login', {
@@ -91,13 +109,23 @@ export const useAuth = create<AuthState>()((set, get) => {
     
     isAuthenticated: () => {
       const token = getAuthCookie();
-      const { tokenExpiry } = get();
-      if (!token || !tokenExpiry) return false;
-      if (Date.now() > tokenExpiry) {
+      if (!token) return false;
+      
+      try {
+        // Decode JWT to check expiry
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Date.now() / 1000;
+        
+        if (payload.exp && payload.exp < currentTime) {
+          get().logout();
+          return false;
+        }
+        
+        return true;
+      } catch {
         get().logout();
         return false;
       }
-      return true;
     },
     
     checkTokenExpiry: () => {

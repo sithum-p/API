@@ -151,6 +151,18 @@ export default function LocalUsersPage() {
       },
     },
     {
+      accessorKey: "profileImage",
+      header: "Profile",
+      cell: ({ row }) => {
+        const image = row.original.profileImage;
+        return image ? (
+          <img src={image} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs">No</div>
+        );
+      },
+    },
+    {
       id: "actions",
       header: () => <div className="text-right pr-1">Actions</div>,
       cell: ({ row, table }) => {
@@ -210,6 +222,7 @@ export default function LocalUsersPage() {
           gender: data.gender,
           email: data.email,
           birthdate: new Date(data.birthday).toISOString(),
+          profileImage: data.profileImage,
         };
         
         // Only include password if it's provided
@@ -230,6 +243,7 @@ export default function LocalUsersPage() {
           email: data.email,
           birthdate: new Date(data.birthday).toISOString(),
           password: data.password,
+          profileImage: data.profileImage,
         };
         
         console.log('Adding user with data:', userData);
@@ -380,6 +394,12 @@ export default function LocalUsersPage() {
                 {viewingUser.role || 'user'}
               </p>
             </div>
+            {viewingUser.profileImage && (
+              <div className="sm:col-span-2">
+                <p className="text-xs text-gray-500">Profile Image</p>
+                <img src={viewingUser.profileImage} alt="Profile" className="w-20 h-20 rounded-lg object-cover" />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-sm text-gray-500">No user selected.</div>

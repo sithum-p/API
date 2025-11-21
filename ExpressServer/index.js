@@ -5,6 +5,7 @@ import cors from 'cors';
 import usersRouter from "./routes/users.js";
 import authRouter from "./routes/auth.js";
 import send2faRouter from "./routes/send-2fa.js";
+import uploadRouter from "./routes/upload.js";
 const app=express();
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/auth", send2faRouter);
+app.use("/api/upload", uploadRouter);
 
 mongoose.connect(MONGO_URL).then(()=>{
     console.log("Connected to MongoDB");
@@ -74,7 +76,8 @@ app.get("/api/products",async(req,res)=>{
             Price: product.Price || 0,
             Category: product.Category || '',
             Brand: product.Brand || '',
-            Stock: product.Stock || 0
+            Stock: product.Stock || 0,
+            imageUrl: product.imageUrl || ''
         }));
         
         // Send paginated response
@@ -103,3 +106,33 @@ app.get("/api/products",async(req,res)=>{
         });
     }
 })
+
+// PUT /api/products/:id
+app.put("/api/products/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateData = req.body;
+        
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            id, 
+            updateData, 
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedProduct) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+        
+        res.json({
+            success: true,
+            data: updatedProduct,
+            message: "Product updated successfully"
+        });
+    } catch (error) {
+        console.error('Product update error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to update product' 
+        });
+    }
+});

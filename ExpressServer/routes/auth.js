@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
 // Register endpoint
 router.post("/register", async (req, res) => {
   try {
-    const { firstname, lastname, age, gender, email, birthdate, password, role } = req.body;
+    const { firstname, lastname, age, gender, email, birthdate, password, role, profileImage, coverImage } = req.body;
     
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -81,7 +81,9 @@ router.post("/register", async (req, res) => {
       email,
       birthdate,
       password: hashedPassword,
-      role: role || 'user'
+      role: role || 'user',
+      profileImage: profileImage || '',
+      coverImage: coverImage || ''
     });
     
     // Generate JWT token

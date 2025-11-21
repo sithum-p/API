@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ImageUpload from "@/components/customUi/ImageUpload";
 import type { User } from "@/apis/users/users.api";
 
 const createSchema = z.object({
@@ -19,6 +20,7 @@ const createSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  profileImage: z.string().optional(),
 });
 
 const updateSchema = z.object({
@@ -30,6 +32,7 @@ const updateSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   password: z.string().optional(),
+  profileImage: z.string().optional(),
 });
 
 type FormData = z.infer<typeof createSchema>;
@@ -54,6 +57,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
       phone: "",
       birthday: "",
       password: "",
+      profileImage: "",
     },
   });
 
@@ -68,6 +72,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
         phone: "",
         birthday: editingUser.birthdate ? editingUser.birthdate.split('T')[0] : "",
         password: editingUser.password || "",
+        profileImage: editingUser.profileImage || "",
       });
     } else {
       form.reset({
@@ -79,6 +84,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
         phone: "",
         birthday: "",
         password: "",
+        profileImage: "",
       });
     }
   }, [editingUser, form]);
@@ -214,6 +220,20 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
                   <FormLabel>{editingUser ? "Password (leave blank to keep current)" : "Password"}</FormLabel>
                   <FormControl><Input type="password" {...field} placeholder={editingUser ? "Enter new password or leave blank" : "Enter password"} /></FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="profileImage"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <ImageUpload
+                    label="Profile Image"
+                    value={field.value}
+                    onChange={field.onChange}
+                    onRemove={() => field.onChange("")}
+                  />
                 </FormItem>
               )}
             />

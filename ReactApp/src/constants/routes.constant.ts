@@ -1,5 +1,5 @@
 export const ROUTES = {
-  DASHBOARD: '/',
+  DASHBOARD: '/dashboard',
   USERS_LIST: '/users',
   LOCAL_USERS: '/local-users',
   FIRST_TABLE: '/first-table',

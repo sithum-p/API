@@ -1,18 +1,21 @@
 import * as React from 'react';
+import { toast } from 'sonner';
 import type { Product } from '@/types/product';
 import { DataTable } from '@/tables/data-table';
 import { columns } from '@/tables/columns';
 import UserDetailsDialog from '@/components/customUi/UserDetailsDialog';
+import ProductFormDialog from '@/components/customUi/ProductFormDialog';
 import { useProductsQuery } from '@/hooks/products/useProductsQuery.hook';
+import { productsAPI } from '@/apis/products/products.api';
 
 export default function ProductsTable() {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
   const [selectedIds, setSelectedIds] = React.useState<Set<string | number>>(new Set());
   const [open, setOpen] = React.useState(false);
-  const [activeProduct, setActiveProduct] = React.useState<Product | null>(
-    null
-  );
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [activeProduct, setActiveProduct] = React.useState<Product | null>(null);
+  const [editingProduct, setEditingProduct] = React.useState<Product | null>(null);
   const [search, setSearch] = React.useState('');
 
   const { data, isLoading, error } = useProductsQuery(page, pageSize);
@@ -25,6 +28,26 @@ export default function ProductsTable() {
   const openDetails = (product: Product) => {
     setActiveProduct(product);
     setOpen(true);
+  };
+
+  const openEdit = (product: Product) => {
+    setEditingProduct(product);
+    setEditOpen(true);
+  };
+
+  const handleUpdate = async (data: any) => {
+    if (!editingProduct) return;
+    
+    try {
+      await productsAPI.update(editingProduct._id, data);
+      toast.success('Product updated successfully!');
+      setEditOpen(false);
+      setEditingProduct(null);
+      // Refresh data
+      window.location.reload();
+    } catch (error) {
+      toast.error('Failed to update product');
+    }
   };
 
   return (
@@ -52,6 +75,7 @@ export default function ProductsTable() {
             setPage(1);
           }}
           onRowAction={openDetails}
+          onSecondaryAction={openEdit}
         />
       </div>
       <UserDetailsDialog
@@ -85,11 +109,24 @@ export default function ProductsTable() {
               <p className="text-xs text-gray-500">Stock</p>
               <p className="font-medium">{activeProduct.Stock}</p>
             </div>
+            {activeProduct.productImage && (
+              <div className="sm:col-span-2">
+                <p className="text-xs text-gray-500">Product Image</p>
+                <img src={activeProduct.productImage} alt="Product" className="w-32 h-32 rounded-lg object-cover" />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-sm text-gray-500">No product selected.</div>
         )}
       </UserDetailsDialog>
+      
+      <ProductFormDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        editingProduct={editingProduct}
+        onSubmit={handleUpdate}
+      />
     </>
   );
 }

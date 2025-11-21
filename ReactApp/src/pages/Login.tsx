@@ -5,6 +5,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/store/useAuth";
+import { ROUTES } from "@/constants/routes.constant";
 import AuthLayout from "./AuthLayout";
 
 export default function Login() {
@@ -20,7 +21,7 @@ export default function Login() {
     
     try {
       await login(email, password);
-      navigate("/");
+      navigate(ROUTES.DASHBOARD, { replace: true });
     } catch (error: any) {
       setError(error.message || "Login failed. Please try again.");
     }

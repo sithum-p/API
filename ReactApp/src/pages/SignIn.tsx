@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
-import { useLocalUsers } from "@/store/useLocalUsers";
 import AuthLayout from "./AuthLayout";
 
 export default function SignIn() {
@@ -21,7 +20,7 @@ export default function SignIn() {
   });
   const navigate = useNavigate();
 
-  const { addUser } = useLocalUsers();
+
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +33,7 @@ export default function SignIn() {
     try {
       // Validate all fields are filled
       if (!formData.firstname || !formData.lastname || !formData.age || !formData.gender || !formData.email || !formData.birthdate || !formData.password || !formData.role) {
-        alert('Please fill all fields');
+        alert('Please fill all required fields');
         return;
       }
       
@@ -49,12 +48,20 @@ export default function SignIn() {
         role: formData.role
       };
       
-      console.log('Final userData to send:', userData);
-      console.log('Password included:', !!userData.password);
+      // Register user using auth endpoint
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
       
-      console.log('Creating user with data:', userData);
-      const result = await addUser(userData);
-      console.log('User created successfully:', result);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error);
+      }
+      
+      const result = await response.json();
+      console.log('User registered successfully:', result);
       
       // Clear form
       setFormData({

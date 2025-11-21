@@ -10,6 +10,7 @@ export interface User {
   birthdate: string;
   password?: string;
   role: 'admin' | 'user';
+  imageUrl?: string;
 }
 
 export const usersAPI = {
