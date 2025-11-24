@@ -234,6 +234,8 @@ export default function LocalUsersPage() {
         const message = await updateUser(editingUser._id!, updateData);
         toast.success(message);
         setEditingUser(null);
+        // Force refresh the users list
+        fetchUsers();
       } else {
         const userData = {
           firstname: data.firstName,
@@ -252,6 +254,8 @@ export default function LocalUsersPage() {
         const newPageCount = Math.max(1, Math.ceil(newTotal / pageSize));
         setPage(newPageCount);
         toast.success(message);
+        // Force refresh the users list
+        fetchUsers();
       }
       setOpen(false);
     } catch (error: any) {
