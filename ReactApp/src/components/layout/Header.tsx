@@ -12,7 +12,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, getUserName } = useAuth();
+  const userName = getUserName();
   
   const handleLogout = () => {
     logout();
@@ -29,8 +30,11 @@ export default function Header() {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" className="flex items-center gap-2 px-3">
+              <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                {userName.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium hidden sm:block">{userName}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

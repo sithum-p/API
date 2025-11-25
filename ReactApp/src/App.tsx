@@ -37,6 +37,13 @@ function App() {
             </AdminLayout>
           </ProtectedRoute>
         } />
+        <Route path={ROUTES.PRODUCTS} element={
+          <ProtectedRoute>
+            <AdminLayout>
+              <ProductsTable />
+            </AdminLayout>
+          </ProtectedRoute>
+        } />
         <Route path={ROUTES.LOCAL_USERS} element={
           <ProtectedRoute>
             <RoleProtectedRoute requiredRole="admin">

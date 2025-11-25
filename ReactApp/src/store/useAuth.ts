@@ -45,6 +45,18 @@ const getUserRoleFromToken = (): string => {
   }
 };
 
+const getUserNameFromToken = (): string => {
+  const token = getAuthCookie();
+  if (!token) return 'User';
+  
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.email || 'User';
+  } catch {
+    return 'User';
+  }
+};
+
 interface AuthState {
   token: string | null;
   user: any | null;
@@ -54,6 +66,7 @@ interface AuthState {
   isAuthenticated: () => boolean;
   checkTokenExpiry: () => void;
   getUserRole: () => string;
+  getUserName: () => string;
 }
 
 export const useAuth = create<AuthState>()((set, get) => {
@@ -68,6 +81,7 @@ export const useAuth = create<AuthState>()((set, get) => {
       initialUser = {
         id: payload.userId,
         email: payload.email,
+        name: payload.name || payload.email,
         role: payload.role || 'user'
       };
       initialExpiry = payload.exp * 1000; // Convert to milliseconds
@@ -137,6 +151,10 @@ export const useAuth = create<AuthState>()((set, get) => {
     
     getUserRole: () => {
       return getUserRoleFromToken();
+    },
+    
+    getUserName: () => {
+      return getUserNameFromToken();
     }
   };
 });

@@ -35,6 +35,7 @@ router.post("/login", async (req, res) => {
       { 
         userId: user._id, 
         email: user.email,
+        name: `${user.firstname} ${user.lastname}`,
         username: user.email,
         password: user.password,
         role: user.role || 'user'
@@ -91,6 +92,7 @@ router.post("/register", async (req, res) => {
       { 
         userId: user._id, 
         email: user.email,
+        name: `${user.firstname} ${user.lastname}`,
         username: user.email,
         password: hashedPassword,
         role: user.role || 'user'

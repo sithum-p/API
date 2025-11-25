@@ -5,9 +5,9 @@ type State = {
   users: User[];
   loading: boolean;
   fetchUsers: () => Promise<void>;
-  addUser: (u: Omit<User, "_id">) => Promise<string>;
-  updateUser: (id: string, u: Partial<User>) => Promise<string>;
-  removeUser: (id: string) => Promise<string>;
+  addUser: (u: Omit<User, "_id">) => Promise<void>;
+  updateUser: (id: string, u: Partial<User>) => Promise<void>;
+  removeUser: (id: string) => Promise<void>;
 };
 
 export const useLocalUsers = create<State>()((set, get) => ({
@@ -44,8 +44,6 @@ export const useLocalUsers = create<State>()((set, get) => ({
       setTimeout(() => {
         get().fetchUsers();
       }, 500);
-      
-      return response.data.message;
     } catch (error) {
       console.error("Failed to add user:", error);
       throw error;
@@ -58,7 +56,6 @@ export const useLocalUsers = create<State>()((set, get) => ({
       set((s) => ({
         users: s.users.map((x) => (x._id === id ? response.data.data : x))
       }));
-      return response.data.message;
     } catch (error) {
       console.error("Failed to update user:", error);
       throw error;
@@ -69,7 +66,6 @@ export const useLocalUsers = create<State>()((set, get) => ({
     try {
       const response = await usersAPI.delete(id);
       set((s) => ({ users: s.users.filter((x) => x._id !== id) }));
-      return response.data.message;
     } catch (error) {
       console.error("Failed to remove user:", error);
       throw error;

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -94,6 +94,9 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
       <DialogContent className="sm:max-w-[520px] bg-white text-gray-800">
         <DialogHeader>
           <DialogTitle>{editingUser ? "Edit User" : "Add User"}</DialogTitle>
+          <DialogDescription>
+            {editingUser ? "Update user information below." : "Fill in the details to create a new user."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -228,12 +231,14 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
               name="profileImage"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
-                  <ImageUpload
-                    label="Profile Image"
-                    value={field.value}
-                    onChange={field.onChange}
-                    onRemove={() => field.onChange("")}
-                  />
+                  <FormLabel>Profile Image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      onImageUpload={field.onChange}
+                      currentImage={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -7,7 +7,7 @@ import { useAuth } from "@/store/useAuth";
 const getMenuItems = (userRole: string) => {
   const baseItems = [
     { path: ROUTES.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
-    { path: ROUTES.USERS_LIST, label: "Products", icon: Users },
+    { path: ROUTES.PRODUCTS, label: "Products", icon: Users },
   ];
   
   if (userRole === 'admin') {

@@ -1,7 +1,6 @@
 import * as React from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { DataTable } from "@/tables/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -19,7 +18,7 @@ export default function LocalUsersPage() {
     fetchUsers();
   }, []);
   
-  // Force refresh on component mount and when user is added
+  // Handle user added events
   React.useEffect(() => {
     const handleUserAdded = () => {
       console.log('User added event received, refreshing table...');
@@ -28,13 +27,8 @@ export default function LocalUsersPage() {
     
     window.addEventListener('userAdded', handleUserAdded);
     
-    const interval = setInterval(() => {
-      fetchUsers();
-    }, 3000);
-    
     return () => {
       window.removeEventListener('userAdded', handleUserAdded);
-      clearInterval(interval);
     };
   }, [fetchUsers]);
   
@@ -155,10 +149,21 @@ export default function LocalUsersPage() {
       header: "Profile",
       cell: ({ row }) => {
         const image = row.original.profileImage;
-        return image ? (
-          <img src={image} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+        const firstName = row.original.firstname || '';
+        return image && image.trim() !== '' ? (
+          <img 
+            src={image} 
+            alt="Profile" 
+            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200" 
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling.style.display = 'flex';
+            }}
+          />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs">No</div>
+          <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-medium">
+            {firstName.charAt(0).toUpperCase() || 'U'}
+          </div>
         );
       },
     },
@@ -231,10 +236,8 @@ export default function LocalUsersPage() {
         }
         
         console.log('Updating user with data:', updateData);
-        const message = await updateUser(editingUser._id!, updateData);
-        toast.success(message);
+        await updateUser(editingUser._id!, updateData);
         setEditingUser(null);
-        // Force refresh the users list
         fetchUsers();
       } else {
         const userData = {
@@ -249,18 +252,15 @@ export default function LocalUsersPage() {
         };
         
         console.log('Adding user with data:', userData);
-        const message = await addUser(userData);
+        await addUser(userData);
         const newTotal = total + 1;
         const newPageCount = Math.max(1, Math.ceil(newTotal / pageSize));
         setPage(newPageCount);
-        toast.success(message);
-        // Force refresh the users list
         fetchUsers();
       }
       setOpen(false);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || "Operation failed!";
-      toast.error(errorMessage);
+      console.error('Operation failed:', error);
     }
   };
 
@@ -283,8 +283,7 @@ export default function LocalUsersPage() {
     if (!deletingUser) return;
 
     try {
-      const message = await removeUser(deletingUser._id!);
-      toast.success(message);
+      await removeUser(deletingUser._id!);
 
       const newTotal = total - 1;
       const newPageCount = Math.max(1, Math.ceil(Math.max(0, newTotal) / pageSize));
@@ -299,8 +298,7 @@ export default function LocalUsersPage() {
       setDeleteOpen(false);
       setDeletingUser(null);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || error.message || "Failed to delete user!";
-      toast.error(errorMessage);
+      console.error('Failed to delete user:', error);
     }
   };
 
@@ -398,12 +396,20 @@ export default function LocalUsersPage() {
                 {viewingUser.role || 'user'}
               </p>
             </div>
-            {viewingUser.profileImage && (
-              <div className="sm:col-span-2">
-                <p className="text-xs text-gray-500">Profile Image</p>
-                <img src={viewingUser.profileImage} alt="Profile" className="w-20 h-20 rounded-lg object-cover" />
-              </div>
-            )}
+            <div className="sm:col-span-2">
+              <p className="text-xs text-gray-500">Profile Image</p>
+              {viewingUser.profileImage && viewingUser.profileImage.trim() !== '' ? (
+                <img 
+                  src={viewingUser.profileImage} 
+                  alt="Profile" 
+                  className="w-20 h-20 rounded-lg object-cover border-2 border-gray-200" 
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-lg bg-blue-500 text-white flex items-center justify-center text-lg font-medium">
+                  {viewingUser.firstname?.charAt(0).toUpperCase() || 'U'}
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="text-sm text-gray-500">No user selected.</div>
