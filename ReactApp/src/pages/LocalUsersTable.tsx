@@ -148,18 +148,25 @@ export default function LocalUsersPage() {
       accessorKey: "profileImage",
       header: "Profile",
       cell: ({ row }) => {
-        const image = row.original.profileImage;
+        const image = row.original.profileImage || row.original.imageUrl;
         const firstName = row.original.firstname || '';
         return image && image.trim() !== '' ? (
-          <img 
-            src={image} 
-            alt="Profile" 
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray-200" 
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling.style.display = 'flex';
-            }}
-          />
+          <div className="relative">
+            <img 
+              src={image} 
+              alt="Profile" 
+              className="w-10 h-10 rounded-full object-cover border-2 border-gray-200" 
+              onError={(e) => {
+                const target = e.currentTarget;
+                const fallback = target.nextElementSibling as HTMLElement;
+                target.style.display = 'none';
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-medium" style={{display: 'none'}}>
+              {firstName.charAt(0).toUpperCase() || 'U'}
+            </div>
+          </div>
         ) : (
           <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-medium">
             {firstName.charAt(0).toUpperCase() || 'U'}

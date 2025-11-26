@@ -11,6 +11,7 @@ export interface User {
   password?: string;
   role: 'admin' | 'user';
   imageUrl?: string;
+  profileImage?: string;
 }
 
 export const usersAPI = {

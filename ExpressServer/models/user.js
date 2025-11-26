@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     birthdate: { type: String, required : true, trim: true },
     password: { type: String, required : true, trim: true },
     role: { type: String, required: true, enum: ['admin', 'user'], default: 'user', trim: true },
+    profileImage: { type: String, trim: true },
   },
   { timestamps: true }
 );

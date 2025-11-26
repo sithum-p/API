@@ -45,12 +45,12 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8 space-y-6 w-full max-w-md mx-auto">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
           <div>
             <Label htmlFor="email">Email</Label>
             <Input

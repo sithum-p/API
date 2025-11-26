@@ -64,13 +64,13 @@ export default function ProductFormDialog({ open, onOpenChange, editingProduct, 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px] bg-white text-gray-800">
+      <DialogContent className="w-[95vw] max-w-[520px] max-h-[90vh] overflow-y-auto bg-white text-gray-800">
         <DialogHeader>
           <DialogTitle>{editingProduct ? "Edit Product" : "Add Product"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 px-1">
             <FormField
               control={form.control}
               name="Name"

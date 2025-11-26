@@ -124,12 +124,12 @@ export function DataTable<TData extends DataRow>({
       )}
 
       {/* Table */}
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border overflow-x-auto">
+        <Table className="min-w-[800px]">
           <TableHeader>
             <TableRow>
               {/* Our custom header checkbox for 'select all on page' */}
-              <TableHead className="w-10">
+              <TableHead className="w-10 sticky left-0 bg-white z-10">
                 <Checkbox
                   checked={
                     allOnPageSelected ? true : someOnPageSelected ? "indeterminate" : false
@@ -177,7 +177,7 @@ export function DataTable<TData extends DataRow>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {/* Row checkbox (first column) */}
-                  <TableCell className="w-10">
+                  <TableCell className="w-10 sticky left-0 bg-white z-10">
                     <Checkbox
                       checked={selectedIds.has((row.original.id || row.original._id) as string | number)}
                       onCheckedChange={(c) =>

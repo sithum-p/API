@@ -52,7 +52,7 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "productImage",
     header: "Image",
     cell: ({ row }) => {
-      const image = row.original.productImage;
+      const image = row.original.productImage || row.original.imageUrl;
       return image ? (
         <img src={image} alt="Product" className="w-12 h-12 object-cover rounded" />
       ) : (

@@ -72,7 +72,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
         phone: "",
         birthday: editingUser.birthdate ? editingUser.birthdate.split('T')[0] : "",
         password: editingUser.password || "",
-        profileImage: editingUser.profileImage || "",
+        profileImage: editingUser.profileImage || editingUser.imageUrl || "",
       });
     } else {
       form.reset({
@@ -91,7 +91,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px] bg-white text-gray-800">
+      <DialogContent className="w-[95vw] max-w-[520px] max-h-[90vh] overflow-y-auto bg-white text-gray-800">
         <DialogHeader>
           <DialogTitle>{editingUser ? "Edit User" : "Add User"}</DialogTitle>
           <DialogDescription>
@@ -100,7 +100,7 @@ export default function UserFormDialog({ open, onOpenChange, editingUser, onSubm
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 px-1">
             <FormField
               control={form.control}
               name="firstName"
